@@ -3,14 +3,7 @@ package ffmpeg_go
 import (
 	"context"
 	"errors"
-	"io"
 	"log"
-	"os"
-	"strings"
-
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
 // Input file URL (ffmpeg “-i“ option)
@@ -122,12 +115,15 @@ func (s *Stream) Output(fileName string, kwargs ...KwArgs) *Stream {
 	if s.Type != "FilterableStream" {
 		log.Panic("cannot output on non-FilterableStream")
 	}
-	if strings.HasPrefix(fileName, "s3://") {
-		return s.outputS3Stream(fileName, kwargs...)
-	}
+	/*
+		if strings.HasPrefix(fileName, "s3://") {
+			return s.outputS3Stream(fileName, kwargs...)
+		}
+	*/
 	return OutputContext(s.Context, []*Stream{s}, fileName, kwargs...)
 }
 
+/*
 func (s *Stream) outputS3Stream(fileName string, kwargs ...KwArgs) *Stream {
 	r, w := io.Pipe()
 	fileL := strings.SplitN(strings.TrimPrefix(fileName, "s3://"), "/", 2)
@@ -164,3 +160,4 @@ func (s *Stream) outputS3Stream(fileName string, kwargs ...KwArgs) *Stream {
 	o.Context = context.WithValue(o.Context, "run_hook", &runHook)
 	return o
 }
+*/
